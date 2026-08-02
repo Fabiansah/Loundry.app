@@ -101,7 +101,7 @@
                     <form action="{{ route('pengeluaran.store') }}" method="POST" class="space-y-4">
                         @csrf
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Keterangan / Keperluan</label>
+                            <label class="block text-sm font-medium text-gray-700">Keterangan</label>
                             <input type="text" name="keterangan" class="mt-1 block w-full rounded-xl border-slate-200 shadow-sm p-3 border text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
 
@@ -127,8 +127,8 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keterangan / Keperluan</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Jumlah Uang</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keterangan</th>
+                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Nominal Pengeluaran</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
