@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\PegawaiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -125,6 +126,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('transaksi.print_closing', compact('bukuKas', 'riwayatTransaksi', 'pengeluarans'));
     })->name('kasir.printClosing');
 
+    // 5. Rute Verifikasi OTP Pegawai (BARU DITAMBAHKAN)
+    Route::get('/pegawai/verify-otp', [PegawaiController::class, 'otpPage'])->name('pegawai.otp.page');
+    Route::post('/pegawai/verify-otp', [PegawaiController::class, 'verifyOtp'])->name('pegawai.otp.verify');
+
 
     // ---------------------------------------------------------------------
     // B. RUTE OPERASIONAL (Dilindungi check.modal untuk Kasir)
@@ -146,7 +151,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return view('dashboard', compact('totalOmzet', 'totalPiutang', 'cucianAktif', 'siapDiambil', 'totalBeratAktif', 'riwayatTerbaru', 'jumlahTransaksi'));
         })->name('dashboard');
 
-        // Kelola Transaksi
         Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
         Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
         Route::post('/transaksi/{id}/status/{status}', [TransaksiController::class, 'updateStatus'])->name('transaksi.updateStatus');
@@ -160,6 +164,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             $pegawais = User::where('role', 'kasir')->get();
             return view('pegawai.index', compact('pegawais'));
         })->name('pegawai.index');
+
+        // Pendaftaran Pegawai Baru Via Controller (Terhubung dengan OTP Email)
+        Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
 
         Route::post('/pegawai', function(Request $request) {
             if(auth()->user()->role !== 'admin') abort(403);

@@ -5,14 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Pegawai Kasir</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const theme = savedTheme || systemTheme;
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <style>
     /* Mengunci scrollbar vertikal agar navbar tidak bergeser antar halaman */
     html {
         overflow-y: scroll;
     }
+
+    :root {
+        color-scheme: light;
+        --app-bg: #f8fafc;
+        --app-surface: #ffffff;
+        --app-surface-soft: #f8fafc;
+        --app-text: #0f172a;
+        --app-muted: #64748b;
+        --app-border: #e2e8f0;
+        --app-input-bg: #f8fafc;
+        --app-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+
+    [data-theme="dark"] {
+        color-scheme: dark;
+        --app-bg: #020617;
+        --app-surface: #111827;
+        --app-surface-soft: #0f172a;
+        --app-text: #f8fafc;
+        --app-muted: #94a3b8;
+        --app-border: #334155;
+        --app-input-bg: #0f172a;
+        --app-shadow: 0 10px 25px rgba(2, 6, 23, 0.35);
+    }
+
+    body {
+        background-color: var(--app-bg);
+        color: var(--app-text);
+        transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    nav, .bg-white, .bg-slate-50, .bg-gray-50, .bg-slate-100, .bg-gray-100 {
+        transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    nav {
+        background-color: var(--app-surface) !important;
+        border-color: var(--app-border) !important;
+    }
+
+    .bg-white { background-color: var(--app-surface) !important; }
+    .bg-slate-50, .bg-gray-50 { background-color: var(--app-surface-soft) !important; }
+    .bg-slate-100, .bg-gray-100 { background-color: rgba(148, 163, 184, 0.12) !important; }
+    .text-slate-900, .text-gray-900, .text-slate-800, .text-gray-800 { color: var(--app-text) !important; }
+    .text-slate-500, .text-gray-500, .text-slate-600, .text-gray-600, .text-slate-400, .text-gray-400 { color: var(--app-muted) !important; }
+    .border-slate-100, .border-slate-200, .border-gray-100, .border-gray-200 { border-color: var(--app-border) !important; }
+    .shadow, .shadow-sm { box-shadow: var(--app-shadow) !important; }
+    input, textarea, select {
+        background-color: var(--app-input-bg) !important;
+        border-color: var(--app-border) !important;
+        color: var(--app-text) !important;
+    }
+    input::placeholder, textarea::placeholder { color: var(--app-muted) !important; }
+    table thead { background-color: var(--app-surface-soft) !important; }
+    table tbody tr { background-color: var(--app-surface) !important; }
+    table tbody tr:hover { background-color: rgba(79, 70, 229, 0.08) !important; }
+    .theme-toggle-icon { transition: transform 0.2s ease; }
+    .theme-toggle-btn:hover .theme-toggle-icon { transform: rotate(20deg); }
 </style>
 </head>
-<body class="bg-slate-50 font-sans antialiased">
+<body class="font-sans antialiased">
 
     <nav class="bg-white shadow border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,6 +118,12 @@
                 </div>
                 
                 <div class="flex items-center gap-4">
+                    <button id="theme-toggle" type="button" class="theme-toggle-btn inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
+                        <svg id="theme-toggle-icon" class="theme-toggle-icon h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3v2.4M12 18.6v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M3 12h2.4M18.6 12H21M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <circle cx="12" cy="12" r="3.4"></circle>
+                        </svg>
+                    </button>
                     <div class="text-right hidden md:block">
                         <span class="text-sm font-semibold text-slate-900 block">Halo, {{ auth()->user()->name }}</span>
                         <span class="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded uppercase tracking-wider">{{ auth()->user()->role }}</span>
@@ -121,9 +193,9 @@
                     <table class="min-w-full divide-y divide-slate-200 text-sm">
                         <thead class="bg-slate-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Nama Pegawai</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Email Login</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Role System</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Nama Lengkap</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Role</th>
                                 <th class="px-6 py-3 text-center text-xs font-bold text-slate-400 uppercase w-24">Aksi</th> </t>
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-100">
@@ -136,15 +208,16 @@
                                             {{ $pegawai->role }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <form action="{{ route('pegawai.destroy', $pegawai->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun pegawai ini? Mereka akan langsung dikeluarkan dan tidak bisa login kembali!')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-rose-500 hover:text-rose-700 p-1.5 bg-rose-50 hover:bg-rose-100 rounded-lg transition text-xs font-bold">
-                                                Hapus Akun
-                                            </button>
-                                        </form>
-                                    </td>
+
+<td class="px-6 py-4 whitespace-nowrap text-center">
+    <form action="{{ route('pegawai.destroy', $pegawai->id) }}" method="POST" class="inline" onsubmit="return">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="text-xs font-bold text-rose-600 hover:text-rose-800">
+            Hapus
+        </button>
+    </form>
+</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -159,5 +232,48 @@
         </div>
     </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Auto-Dismiss Alert
+        const alertPegawai = document.getElementById('alert-pegawai') || document.getElementById('alert-sukses');
+        if (alertPegawai) {
+            alertPegawai.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            setTimeout(() => {
+                alertPegawai.style.opacity = '0';
+                alertPegawai.style.transform = 'translateY(-8px)';
+                setTimeout(() => alertPegawai.remove(), 500);
+            }, 3000);
+        }
+
+        // 2. Dark/Light Theme Switcher
+        const toggle = document.getElementById('theme-toggle');
+        const icon = document.getElementById('theme-toggle-icon');
+        const label = document.getElementById('theme-toggle-label');
+
+        const icons = {
+            dark: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>',
+            light: '<path d="M12 3v2.4M12 18.6v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M3 12h2.4M18.6 12H21M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="12" r="3.4"></circle>'
+        };
+
+        const updateTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+            localStorage.setItem('theme', theme);
+
+            if (icon) icon.innerHTML = icons[theme] || icons.light;
+            if (label) label.textContent = theme === 'dark' ? 'Mode Gelap' : 'Mode Terang';
+        };
+
+        // Inisialisasi tema saat pertama dimuat
+        const savedTheme = localStorage.getItem('theme') || document.documentElement.getAttribute('data-theme') || 'light';
+        updateTheme(savedTheme);
+
+        // Event listener toggle tema
+        toggle?.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            updateTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+    });
+</script>
 </body>
 </html>

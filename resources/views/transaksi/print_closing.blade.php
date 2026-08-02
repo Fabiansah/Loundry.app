@@ -38,15 +38,21 @@
 </head>
 <body class="bg-slate-100 font-mono antialiased min-h-screen flex flex-col items-center justify-center p-4 text-black">
 
-    <!-- TOMBOL NAVIGASI (TIDAK IKUT TERCETAK) -->
-    <div class="no-print mb-6 flex gap-3">
-        <a href="{{ route('transaksi') }}" class="bg-slate-800 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow transition flex items-center gap-1 font-sans">
-            &larr; Kembali ke Kasir
-        </a>
-        <button onclick="window.print()" class="bg-black hover:bg-slate-800 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow transition flex items-center gap-1 font-sans">
-            🖨️ Cetak Struk Closing
-        </button>
-    </div>
+<!-- TOMBOL NAVIGASI (TIDAK IKUT TERCETAK) -->
+<div class="no-print mb-6 flex items-center gap-2.5 bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200/80 shadow-sm transition-all duration-200 hover:shadow-md">
+    <a href="{{ route('transaksi') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-semibold py-2 px-3.5 rounded-xl transition-all duration-200 flex items-center gap-1.5 font-sans active:scale-95">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Kembali
+    </a>
+    <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-200 flex items-center gap-1.5 font-sans active:scale-95">
+        <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+        </svg>
+        Cetak Nota
+    </button>
+</div>
 
     <!-- CONTAINER STRUK STRUKTUR PERSIS FOTO -->
     <div class="receipt-container bg-white w-full max-w-[340px] p-6 rounded-2xl shadow-xl border border-black text-black text-xs leading-relaxed">
@@ -251,5 +257,43 @@
         window.location.href = "{{ route('kasir.logoutAfterPrint') }}";
     }, 4000);
 </script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+    
+    body {
+        font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+        background-color: #f1f5f9;
+    }
+
+    /* Pengaturan CSS Khusus Mode Cetak / Print */
+    @media print {
+        /* Memaksa browser mencetak seluruh gambar, logo, dan background warna */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
+
+        /* Sembunyikan tombol navigasi saat diprint */
+        .no-print {
+            display: none !important;
+        }
+
+        body {
+            background-color: #ffffff !important;
+            padding: 0 !important;
+        }
+
+        .receipt-container {
+            box-shadow: none !important;
+            border: none !important;
+            width: 100% !important;
+            max-width: 80mm !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+        }
+    }
+</style>
 </body>
 </html>
