@@ -275,7 +275,7 @@
                                             </form>
                                         @else
                                             <div class="flex items-center space-x-2">
-                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-emerald-800">
                                                     🟢 
                                                 </span>
                                                 <a href="{{ route('transaksi.print', ['id' => $item->id, 'auto' => 'true']) }}" target="_blank" title="Cetak Nota" class="p-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition text-xs flex items-center">

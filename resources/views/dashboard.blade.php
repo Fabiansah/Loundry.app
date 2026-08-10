@@ -264,7 +264,7 @@
                                         <span class="px-2.5 py-1 inline-flex text-xs font-bold rounded-full 
                                             {{ $item->status_pembayaran == 'lunas' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}
                                         ">
-                                            {{ $item->status_pembayaran == 'lunas' ? '✓ Lunas' : '⚡ Belum Bayar' }}
+                                            {{ $item->status_pembayaran == 'lunas' ? 'Lunas' : 'Belum Bayar' }}
                                         </span>
                                     </td>
                                 </tr>
