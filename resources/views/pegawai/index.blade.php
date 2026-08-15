@@ -139,31 +139,47 @@
         </div>
     </nav>
 
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <!-- Notifikasi Banner Undangan WhatsApp -->
+        @if(session('wa_link'))
+            <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+                <div>
+                    <h4 class="text-sm font-bold text-emerald-800">Undangan Akun Berhasil Dibuat!</h4>
+                    <p class="text-xs text-emerald-600 mt-0.5">Klik tombol di samping untuk langsung mengirimkan tautan aktivasi ke WhatsApp <b>{{ session('kasir_name') }}</b>.</p>
+                </div>
+                <a href="{{ session('wa_link') }}" target="_blank" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2 flex-shrink-0">
+                    <span>Buka WhatsApp</span>
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.316 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.818-.981z"/></svg>
+                </a>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
+            <!-- Form Undang Pegawai -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit">
-                <h3 class="text-lg font-bold text-slate-900 mb-2">Daftarkan Pegawai</h3>
-                <p class="text-xs text-slate-400 mb-4">Akun yang dibuat otomatis memiliki hak akses sebagai Kasir.</p>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Undang Kasir Baru</h3>
+                <p class="text-xs text-slate-400 mb-4">Kasir akan membuat password mandiri via tautan aktivasi WhatsApp.</p>
 
-                    @if (session('sukses'))
-                        <div class="mb-4 text-xs font-bold text-emerald-700 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                            {{ session('sukses') }}
-                        </div>
-                    @endif
+                @if (session('sukses') && !session('wa_link'))
+                    <div id="alert-sukses" class="mb-4 text-xs font-bold text-emerald-700 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                        {{ session('sukses') }}
+                    </div>
+                @endif
 
-                    @if (session('error'))
-                        <div class="mb-4 text-xs font-bold text-rose-700 bg-rose-50 p-3 rounded-xl border border-rose-200">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                @if (session('error'))
+                    <div class="mb-4 text-xs font-bold text-rose-700 bg-rose-50 p-3 rounded-xl border border-rose-200">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
                 <form action="{{ route('pegawai.store') }}" method="POST" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-xs font-bold text-slate-500">Nama Lengkap</label>
                         <input type="text" name="name" class="mt-1 block w-full rounded-xl border-slate-200 shadow-sm p-3 border text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        @error('name') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
@@ -173,20 +189,22 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-500">Password</label>
-                        <input type="password" name="password" required placeholder="Minimal 8 karakter" class="mt-1 block w-full rounded-xl border-slate-200 shadow-sm p-3 border text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <label class="block text-xs font-bold text-slate-500">Nomor WhatsApp</label>
+                        <input type="text" name="no_hp" class="mt-1 block w-full rounded-xl border-slate-200 shadow-sm p-3 border text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        @error('no_hp') <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-bold text-sm tracking-wide shadow transition-all">
-                        Simpan & Aktifkan Akun
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-bold text-sm tracking-wide shadow transition-all flex items-center justify-center gap-2">
+                        <span>Kirim Undangan Aktivasi</span>
                     </button>
                 </form>
             </div>
 
+            <!-- Tabel Daftar Pegawai -->
             <div class="lg:col-span-2 bg-white shadow-sm rounded-2xl border border-slate-200 overflow-hidden">
                 <div class="px-6 py-5 border-b border-slate-100">
-                    <h2 class="text-lg font-bold text-slate-900">Daftar Pegawai Aktif</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Berikut adalah daftar nama-nama pegawai yang berhak mengoperasikan kasir laundry.</p>
+                    <h2 class="text-lg font-bold text-slate-900">Daftar Pegawai Kasir</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Daftar seluruh pegawai kasir beserta status aktivasi akunnya.</p>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -194,30 +212,52 @@
                         <thead class="bg-slate-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Nama Lengkap</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Role</th>
-                                <th class="px-6 py-3 text-center text-xs font-bold text-slate-400 uppercase w-24">Aksi</th> </t>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">WhatsApp</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase">Status</th>
+                                <th class="px-6 py-3 text-center text-xs font-bold text-slate-400 uppercase w-24">Aksi</th>
+                            </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-100">
                             @forelse ($pegawais as $pegawai)
                                 <tr class="hover:bg-slate-50/80 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap font-bold text-slate-900">{{ $pegawai->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-slate-600">{{ $pegawai->email }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2.5 py-1 inline-flex text-[10px] font-black rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 uppercase tracking-wider">
-                                            {{ $pegawai->role }}
-                                        </span>
+                                    <td class="px-6 py-4 whitespace-nowrap font-bold text-slate-900">
+                                        {{ $pegawai->name }}
                                     </td>
-
-<td class="px-6 py-4 whitespace-nowrap text-center">
-    <form action="{{ route('pegawai.destroy', $pegawai->id) }}" method="POST" class="inline" onsubmit="return">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="text-xs font-bold text-rose-600 hover:text-rose-800">
-            Hapus
-        </button>
-    </form>
-</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-600">
+                                        <div>{{ $pegawai->email }}</div>
+                                        <div class="text-[11px] text-slate-400 font-medium font-mono">
+                                            @if($pegawai->no_hp)
+                                                @php
+                                                    $hp = preg_replace('/^0/', '62', $pegawai->no_hp);
+                                                    $formatted = preg_replace('/(\d{2})(\d{3,4})(\d{4})(\d+)/', '+$1 $2-$3-$4', $hp);
+                                                @endphp
+                                                {{ $formatted }}
+                                            @else
+                                                -
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if(($pegawai->status_akun ?? 'aktif') === 'aktif')
+                                            <span class="px-2.5 py-1 inline-flex text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wider">
+                                                Aktif
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 inline-flex text-[10px] font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wider">
+                                                Menunggu Aktivasi
+                                            </span>
+                                        @endif
+                                        
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <form action="{{ route('pegawai.destroy', $pegawai->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-xs font-bold text-rose-600 hover:text-rose-800 transition">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

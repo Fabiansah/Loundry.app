@@ -126,10 +126,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('transaksi.print_closing', compact('bukuKas', 'riwayatTransaksi', 'pengeluarans'));
     })->name('kasir.printClosing');
 
-    // 5. Rute Verifikasi OTP Pegawai (BARU DITAMBAHKAN)
-    Route::get('/pegawai/verify-otp', [PegawaiController::class, 'otpPage'])->name('pegawai.otp.page');
-    Route::post('/pegawai/verify-otp', [PegawaiController::class, 'verifyOtp'])->name('pegawai.otp.verify');
-
 
     // ---------------------------------------------------------------------
     // B. RUTE OPERASIONAL (Dilindungi check.modal untuk Kasir)
@@ -164,9 +160,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             $pegawais = User::where('role', 'kasir')->get();
             return view('pegawai.index', compact('pegawais'));
         })->name('pegawai.index');
-
-        // Pendaftaran Pegawai Baru Via Controller (Terhubung dengan OTP Email)
-        Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
 
         Route::post('/pegawai', function(Request $request) {
             if(auth()->user()->role !== 'admin') abort(403);
@@ -248,6 +241,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->back()->with('sukses', 'Pengeluaran kas mendadak berhasil dicatat!');
         })->name('pengeluaran.store');
 
+        // --- RUTE PUBLIK: AKTIVASI KASIR VIA LINK WHATSAPP ---
+        Route::get('/aktivasi/{token}', [PegawaiController::class, 'showAktivasiForm'])->name('pegawai.aktivasi.form');
+        Route::post('/aktivasi/{token}', [PegawaiController::class, 'prosesAktivasi'])->name('pegawai.aktivasi.process');
+
+        // --- RUTE INTERNAL ADMIN (Di dalam middleware auth) ---
+        Route::middleware(['auth', 'verified'])->group(function () {
+            Route::middleware(['check.modal'])->group(function () {
+                // Kelola Pegawai
+                Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+                Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+                Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+            });
+        });
     });
 });
 

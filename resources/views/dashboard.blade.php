@@ -243,7 +243,18 @@
                                 <tr class="hover:bg-slate-50/80 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="block font-bold text-slate-900">{{ $item->nama_pelanggan }}</span>
-                                        <span class="text-xs text-slate-400 block mt-0.5">{{ $item->nomor_hp ?? 'Tanpa No. HP' }}</span>
+                                        <span class="text-xs text-slate-400 block mt-0.5 font-mono">
+                                            @if(!empty($item->nomor_hp))
+                                                @php
+                                                    $cleanHp = preg_replace('/[^0-9]/', '', $item->nomor_hp);
+                                                    $cleanHp = preg_replace('/^0/', '62', $cleanHp);
+                                                    $formatted = preg_replace('/(\d{2})(\d{3,4})(\d{4})(\d+)/', '+$1 $2-$3-$4', $cleanHp);
+                                                @endphp
+                                                {{ $formatted }}
+                                            @else
+                                                Tanpa No. HP
+                                            @endif
+                                        </span>
                                         <span class="mt-1 inline-block text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
                                             {{ $item->paket ?? 'Reguler' }}
                                         </span>
@@ -257,7 +268,7 @@
                                             {{ $item->status_laundry == 'selesai' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : '' }}
                                             {{ $item->status_laundry == 'diambil' ? 'bg-slate-100 text-slate-600' : '' }}
                                         ">
-                                            ● {{ ucfirst($item->status_laundry) }}
+                                            {{ ucfirst($item->status_laundry) }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">

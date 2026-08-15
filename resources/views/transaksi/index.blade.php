@@ -220,7 +220,18 @@
                                 <tr>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ $item->nama_pelanggan }} 
-                                        <span class="text-xs text-gray-500 block">{{ $item->nomor_hp ?? '-' }}</span>
+                                        <span class="text-xs text-gray-500 block font-mono">
+                                            @if(!empty($item->nomor_hp))
+                                                @php
+                                                    $cleanHp = preg_replace('/[^0-9]/', '', $item->nomor_hp);
+                                                    $cleanHp = preg_replace('/^0/', '62', $cleanHp);
+                                                    $formatted = preg_replace('/(\d{2})(\d{3,4})(\d{4})(\d+)/', '+$1 $2-$3-$4', $cleanHp);
+                                                @endphp
+                                                {{ $formatted }}
+                                            @else
+                                                -
+                                            @endif
+                                        </span>
                                         
                                         <span class="mt-1 inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">
                                             {{ $item->paket ?? 'Reguler' }} (Rp {{ number_format($item->harga_per_kg ?? 6000, 0, ',', '.') }}/Kg)
@@ -260,7 +271,7 @@
                                             </div>
                                         @else
                                             <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-slate-100 text-slate-600">
-                                                ✓ Sudah Diambil
+                                                Sudah Diambil
                                             </span>
                                         @endif
                                     </td>
@@ -269,7 +280,7 @@
                                         @if($item->status_pembayaran == 'belum_bayar')
                                             <form action="{{ route('transaksi.updatePembayaran', $item->id) }}" method="POST" class="inline">
                                                 @csrf
-                                                <button type="submit" onclick="return" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 hover:bg-red-200">
+                                                <button type="submit" onclick="return" class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-red-800 hover:bg-red-200">
                                                     🔴
                                                 </button>
                                             </form>
