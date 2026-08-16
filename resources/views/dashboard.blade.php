@@ -222,9 +222,6 @@
                             <p class="text-xs text-slate-400 mt-0.5">Menampilkan {{ $jumlahTransaksi }} transaksi dari kasir dalam 7 hari terakhir.</p>
                         @endif
                     </div>
-                    <a href="{{ route('transaksi') }}" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition-all flex items-center gap-1">
-                        Buka Kasir &rarr;
-                    </a>
                 </div>
 
                 <div class="overflow-x-auto">
