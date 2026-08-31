@@ -236,7 +236,7 @@
             // Auto hide notification 3 detik
             const alertSukses = document.getElementById('alert-sukses');
             if (alertSukses) {
-                setTimeout(function () {
+                setTimeout(function () { 
                     alertSukses.style.opacity = '0';
                     setTimeout(function () {
                         alertSukses.style.display = 'none';
@@ -244,7 +244,6 @@
                 }, 3000);
             }
 
-            // Real-time Rupiah Formatter
             const jumlahDisplay = document.getElementById('jumlah_display');
             const jumlahHidden = document.getElementById('jumlah');
 

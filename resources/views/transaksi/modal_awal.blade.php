@@ -57,7 +57,7 @@
             <!-- Tombol Submit -->
             <button 
                 type="submit" 
-                class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white rounded-2xl font-bold text-xs tracking-wide shadow-sm shadow-indigo-200 transition duration-150"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-bold text-sm tracking-wide shadow transition-all"
             >
                 Buka Kasir Sekarang
             </button>

@@ -298,7 +298,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-4 py-4 text-center text-sm text-gray-500 italic">Belum ada transaksi hari ini.</td>
+                                    <td colspan="5" class="px-4 py-8 text-center text-sm text-gray-500 italic">Belum ada transaksi hari ini.</td>
                                 </tr>
                             @endforelse
                         </tbody>
